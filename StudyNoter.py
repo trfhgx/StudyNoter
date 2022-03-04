@@ -1,6 +1,6 @@
 import threading
 import time
-from threading import Timer,Thread,Event
+from threading import Thread,Event
 from datetime import datetime
 import subprocess
 import sys
@@ -18,12 +18,11 @@ import addtionlfuctions
 # implement pip as a subprocess:
 
 
-app_version = "2.0.0 Alpha"
+app_version = "3.0.0 Alpha"
 schooldays = [0, 1, 2, 3, 6]
 weekends = [4, 5]
 standard_session_time = 5
-standard_break_time = 10
-bonus = {'v':1.75, 'n':0.8 , 'y': 1.3}
+bonus = {'v':1.85, 'n':0.8 , 'y': 1.33}
 
 class TimerClass(threading.Thread):
     def __init__(self, count, sessions):
@@ -33,6 +32,7 @@ class TimerClass(threading.Thread):
         self.sessions2 = sessions
         self.sessions_done = 0
         self.break_count = 0
+        self.standard_break_time = 10
         self.count = count
 
     def run(self):
@@ -58,9 +58,11 @@ class TimerClass(threading.Thread):
 
     def break_time(self, num):
         if num == 4:
-            break_count = 90 * 60 * (self.sessions_done / 4)
+            self.break_count = 0
+            break_count = 65 * 60 * (self.sessions_done / 4)
+
         else:
-            break_count = (standard_break_time + self.sessions_done * 5) * 60
+            break_count = (self.standard_break_time + self.sessions_done * 3) * 60
 
         while break_count > 0 and not self.event.is_set():
             self.timer(break_count)
@@ -81,34 +83,44 @@ class TimerClass(threading.Thread):
         self.event.set()
 
 
-def beforestart():
+def before_start():
     print("Before we start tell us how you feel right now from a scale of 1 to 10 the higher the better")
-    mood = float(input('1 - 10 :  '))
-    e = (input('are your exams near to start? v=very close, n=not by a long shot, y=in the middle v/n/y: '))
-    sessions(mood, e)
+    ok = True
+    while ok:
+        try:
+            mood = float(input('1 - 10 :  '))
+            if mood <= 10 and mood >= 0:
+                e = (input('are your exams near to start? v=very close, n=not by a long shot, y=in the middle v/n/y: '))
+                sessions(mood, e)
+                ok = False
+            else:
+                print(f"{addtionlfuctions.bcolors.FAIL}Error VE2 ")
+                print(f"{addtionlfuctions.bcolors.WARNING}There seems to be an error (VE2 = the number inputted is not in range of 0-10 ) with processing your input please recheck your input! {addtionlfuctions.bcolors.ENDC}")
+        except (ValueError , KeyError):
+            print(f"{addtionlfuctions.bcolors.FAIL}Error VE1 ")
+            print(f"{addtionlfuctions.bcolors.WARNING}There seems to be an error (VE1) with processing your input please recheck your input{addtionlfuctions.bcolors.ENDC}")
+
+
 
 
 def sessions(mood, e):
-    print((bonus[e]))
     now = datetime.now()
-    sessions = standard_session_time
+    sessionss = standard_session_time
     parm = now.weekday()
-
     if parm in schooldays:
-        sessions =( (sessions * 0.6) * (mood / 6) ) * (bonus[e])
+        sessionss =( (sessionss * 0.7) * (mood / 5.5) ) * (bonus[e])
     else:
-        sessions = ((sessions * 1.35) * (mood / 7)) * (bonus[e])
-    if sessions <= 0:
-        print('You should take a break today and have fun!')
+        sessionss = ((sessionss * 1.35) * (mood / 7.5)) * (bonus[e])
+    if sessionss <= 0:
+        print('You should take a break today and enjoy yourself!')
     else:
-        t = TimerClass(60 * 50, round(sessions))
-        input('Are you ready!? ')
+        s = input('Are you ready!? ')
+
+        t = TimerClass(60 * 50, round(sessionss))
         t.run()
 
 
 
-
-
-beforestart()
+before_start()
 
 

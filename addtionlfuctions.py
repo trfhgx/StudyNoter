@@ -11,19 +11,27 @@ except Exception:
 import pathlib
 
 
-c = str(pathlib.Path(__file__).parent.resolve())
+c =(pathlib.Path(__file__).parent.resolve())
 def finish():
-    g = c+'/Music/ost/finish1.wav'
+    g = (str(c)+'/Music/ost/finish1.wav').replace(" ", "%20")
     if os.name == "posix":
         playsound(g)
     else:
         playsound(g.replace('/', '\\'))
-
 def start():
-    g = 'Music/ost/start.mp3'
+    g =(str(c)+'/Music/ost/start.mp3').replace(" ", "%20")
     if os.name == "posix":
         playsound(g)
     else:
         playsound(g.replace('/', '\\'))
 
-
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
