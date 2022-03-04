@@ -1,11 +1,11 @@
 from playsound import playsound
 import pathlib
-c = pathlib.Path(__file__).parent.resolve()
 
-print(c)
+
+c = str(pathlib.Path(__file__).parent.resolve())
 
 def finish():
-    playsound(str(c)+'/Music/ost/finish1.wav')
+    playsound(c+'/Music/ost/finish1.wav')
 
 def start():
-    playsound(str(c)+'/Music/ost/start.mp3')
+    playsound(c+'/Music/ost/start.mp3')
