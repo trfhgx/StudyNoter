@@ -2,13 +2,23 @@ import threading
 import time
 from threading import Timer,Thread,Event
 from datetime import datetime
-from playsound import  playsound
-import art
+import subprocess
 import sys
+try:
+    import art
+except Exception:
+        print('there seems to be an error! no worries Ill fix it for you right away')
+        subprocess.check_call([sys.executable, '-m', 'pip', 'install',
+                               'art'])
+        import art
+
 import addtionlfuctions
 
 
-app_version = "1.1.0 Alpha"
+# implement pip as a subprocess:
+
+
+app_version = "2.0.0 Alpha"
 schooldays = [0, 1, 2, 3, 6]
 weekends = [4, 5]
 standard_session_time = 5
