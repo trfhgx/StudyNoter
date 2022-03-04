@@ -1,71 +1,56 @@
-import threading
-import time
-from threading import Thread,Event
-from datetime import datetime
-import subprocess
-import sys
-try:
-    import art
-except Exception:
-        print('there seems to be an error! no worries Ill fix it for you right away')
-        subprocess.check_call([sys.executable, '-m', 'pip', 'install',
-                               'art'])
-        import art
+import bin.models as models
 
-import addtionlfuctions
-
-
-# implement pip as a subprocess:
-
-
-app_version = "3.0.0 Alpha"
+import bin.config as config
+confi = config.load_config()
+print('Hello!!', confi.name)
+app_version = "4.0.0 Alpha"
 schooldays = [0, 1, 2, 3, 6]
 weekends = [4, 5]
 standard_session_time = 5
 bonus = {'v':1.85, 'n':0.8 , 'y': 1.33}
 
-class TimerClass(threading.Thread):
-    def __init__(self, count, sessions):
-        threading.Thread.__init__(self)
-        self.event = threading.Event()
-        self.sessions = sessions
-        self.sessions2 = sessions
+class TimerClass(models.threading.Thread):
+    def __init__(self, count, sessionst):
+        models.threading.Thread.__init__(self)
+        self.event = models.threading.Event()
+        self.sessions = sessionst
+        self.sessions2 = sessionst
         self.sessions_done = 0
         self.break_count = 0
-        self.standard_break_time = 10
+        self.standard_break_time = float(confi.break_time)
         self.count = count
 
     def run(self):
         print(f'Session {self.sessions_done + 1}/{self.sessions2}')
-        art.tprint(f'Session {str(self.sessions_done + 1)} ')
-        addtionlfuctions.start()
+        models.art.tprint(f'Session {str(self.sessions_done + 1)} ')
+        models.addtionlfuctions.start(__file__)
         while self.count > 0 and not self.event.is_set():
-            self.timer(self.count)
+            self.Timer_(self.count - 1)
             self.count -= 1
             self.event.wait(1)
 
-        print(f'Great job you finished ! enjoy your break!')
+        print('\nGreat job you finished ! enjoy your break!')
         self.sessions -= 1
         self.break_count += 1
         self.sessions_done += 1
-        addtionlfuctions.finish()
+        models.addtionlfuctions.finish(__file__)
         if self.sessions > 0:
             self.break_time(self.break_count)
         else:
             self.stop()
-            print('Great job!!!!!! you are done now go rest')
+            print(f'\nAstonishing job! you did {self.sessions_done} session and that means you studied/worked for {self.sessions_done * 50} minutes! now go rest and enjoy your day')
 
 
     def break_time(self, num):
         if num == 4:
             self.break_count = 0
-            break_count = 65 * 60 * (self.sessions_done / 4)
+            break_count = float(confi.long_break) * 60 * (self.sessions_done / 4)
 
         else:
-            break_count = (self.standard_break_time + self.sessions_done * 3) * 60
+            break_count = (self.standard_break_time + self.sessions_done * float(confi.bonus_break)) * 60
 
         while break_count > 0 and not self.event.is_set():
-            self.timer(break_count)
+            self.Timer_(break_count)
             break_count -= 1
             self.event.wait(1)
         print(f'Get ready for another session there is {self.sessions} sessions left')
@@ -73,10 +58,11 @@ class TimerClass(threading.Thread):
         self.run()
 
 
-    def timer(self, num):
+    def Timer_(self, num):
         q, mod = divmod(num, 60)
-        sys.stdout.write(f"\rTime left: {int(q)}:{mod} ")
-        sys.stdout.flush()
+        if len(str(mod)) == 1: mod = '0' + str(mod)[:1]
+        models.sys.stdout.write(f"\rTime left: {int(q)}:{int(mod)} ")
+        models.sys.stdout.flush()
 
 
     def stop(self):
@@ -94,33 +80,32 @@ def before_start():
                 sessions(mood, e)
                 ok = False
             else:
-                print(f"{addtionlfuctions.bcolors.FAIL}Error VE2 ")
-                print(f"{addtionlfuctions.bcolors.WARNING}There seems to be an error (VE2 = the number inputted is not in range of 0-10 ) with processing your input please recheck your input! {addtionlfuctions.bcolors.ENDC}")
+                print(f"{models.addtionlfuctions.bcolors.FAIL}Error VE2 ")
+                print(f"{models.addtionlfuctions.bcolors.WARNING}There seems to be an error (VE2 = the number inputted is not in range of 0-10 ) with processing your input please recheck your input! {models.addtionlfuctions.bcolors.ENDC}")
         except (ValueError , KeyError):
-            print(f"{addtionlfuctions.bcolors.FAIL}Error VE1 ")
-            print(f"{addtionlfuctions.bcolors.WARNING}There seems to be an error (VE1) with processing your input please recheck your input{addtionlfuctions.bcolors.ENDC}")
+            print(f"{models.addtionlfuctions.bcolors.FAIL}Error VE1 ")
+            print(f"{models.addtionlfuctions.bcolors.WARNING}There seems to be an error (VE1) with processing your input please recheck your input{models.addtionlfuctions.bcolors.ENDC}")
 
 
 
 
 def sessions(mood, e):
-    now = datetime.now()
+    now = models.datetime.now()
     sessionss = standard_session_time
     parm = now.weekday()
     if parm in schooldays:
         sessionss =( (sessionss * 0.7) * (mood / 5.5) ) * (bonus[e])
     else:
         sessionss = ((sessionss * 1.35) * (mood / 7.5)) * (bonus[e])
-    if sessionss <= 0:
+    if sessionss < 1:
         print('You should take a break today and enjoy yourself!')
     else:
-        s = input('Are you ready!? ')
+        input(f'Are you ready {confi.name}!? ')
 
-        t = TimerClass(60 * 50, round(sessionss))
+        t = TimerClass(float(confi.session_time) * 60, round(sessionss))
         t.run()
 
-
-
-before_start()
+if __name__ == "__main__":
+    before_start()
 
 
