@@ -10,4 +10,6 @@ try:
 except ModuleNotFoundError as e:
         import bin.requirements
         bin.requirements.install()
+        import art
+        import bin.addtionlfuctions as addtionlfuctions
 

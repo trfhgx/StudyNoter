@@ -3,7 +3,7 @@ import os
 from pathlib import Path
 
 data = {1:'name', 2:'session time', 3:'break time', 4:'bonus break time', 5:'long break time'}
-version = 'v4.0.0 Alpha'
+version = 'v5.0.0 Alpha'
 class Config():
     def __init__(self, name='Joe', session_time=50, break_time=10, bonus_break=3, long_break=65):
         self.name = name
@@ -63,7 +63,7 @@ def load_config():
             file = json.load(e)
             config = Config(file[data[1]], file[data[2]], file[data[3]], file[data[4]], file[data[5]])
         key = input(
-            f'Hello {config.name}!! welcome back to studyNoter {version}!. please type \n 1 /if you would like to continue \n 2 /if you would like to change your config \n 3 /if you would like to go with default config \n 4 /if you would like to take a look at your config \n ')
+            f'Hello {config.name}!! welcome back to studyNoter {version}!. please type \n 1 /if you would like to continue \n 2 /if you would like to change your config \n 3 /if you would like to go with default config \n 4 /if you would like to take a look at your config and continue \n ')
         if not check(key, 4):
             load_config()
         else:

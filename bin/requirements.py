@@ -2,7 +2,7 @@ import subprocess
 import sys
 def install():
     print('ERROR M1/// running some code to fix it...')
-    with open('requirements ', 'r') as t:
+    with open('bin/requirements ', 'r') as t:
         print('Downloading requirements')
         for i in t.readlines():
             subprocess.check_call([sys.executable, '-m', 'pip', 'install',

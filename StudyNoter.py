@@ -3,7 +3,7 @@ import bin.models as models
 import bin.config as config
 confi = config.load_config()
 print('Hello!!', confi.name)
-app_version = "4.0.0 Alpha"
+app_version = "5.0.0 Alpha"
 schooldays = [0, 1, 2, 3, 6]
 weekends = [4, 5]
 standard_session_time = 5
@@ -23,22 +23,22 @@ class TimerClass(models.threading.Thread):
     def run(self):
         print(f'Session {self.sessions_done + 1}/{self.sessions2}')
         models.art.tprint(f'Session {str(self.sessions_done + 1)} ')
-        models.addtionlfuctions.start(__file__)
+        models.addtionlfuctions.start(__file__, self.sessions_done)
         while self.count > 0 and not self.event.is_set():
             self.Timer_(self.count - 1)
             self.count -= 1
             self.event.wait(1)
 
         print('\nGreat job you finished ! enjoy your break!')
+        models.addtionlfuctions.finish(__file__, self.sessions_done)
         self.sessions -= 1
         self.break_count += 1
         self.sessions_done += 1
-        models.addtionlfuctions.finish(__file__)
         if self.sessions > 0:
             self.break_time(self.break_count)
         else:
             self.stop()
-            print(f'\nAstonishing job! you did {self.sessions_done} session and that means you studied/worked for {self.sessions_done * 50} minutes! now go rest and enjoy your day')
+            print(f'\nAstonishing job! you did {self.sessions_done} session and that means you studied/worked for {self.sessions_done * float(confi.session_time)} minutes! now go rest and enjoy your day')
 
 
     def break_time(self, num):
@@ -54,7 +54,7 @@ class TimerClass(models.threading.Thread):
             break_count -= 1
             self.event.wait(1)
         print(f'Get ready for another session there is {self.sessions} sessions left')
-        self.count = 60 * 50
+        self.count = 60 * float(confi.session_time)
         self.run()
 
 
