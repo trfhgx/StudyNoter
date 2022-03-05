@@ -2,7 +2,6 @@ import bin.models as models
 
 import bin.config as config
 confi = config.load_config()
-print('Hello!!', confi.name)
 app_version = "5.0.0 Alpha"
 schooldays = [0, 1, 2, 3, 6]
 weekends = [4, 5]
@@ -60,8 +59,9 @@ class TimerClass(models.threading.Thread):
 
     def Timer_(self, num):
         q, mod = divmod(num, 60)
+        mod = int(mod)
         if len(str(mod)) == 1: mod = '0' + str(mod)[:1]
-        models.sys.stdout.write(f"\rTime left: {int(q)}:{int(mod)} ")
+        models.sys.stdout.write(f"\rTime left: {int(q)}:{mod} ")
         models.sys.stdout.flush()
 
 
