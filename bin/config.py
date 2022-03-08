@@ -8,11 +8,14 @@ version = 'v6.0.0 Alpha'
 class Config():
     def __init__(self, name='Joe', session_time=50, break_time=10, bonus_break=3, long_break=65):
         self.name = name
-        self.session_time = int(session_time)
-        self.break_time = int(break_time)
-        self.bonus_break = int(bonus_break)
-        self.long_break = int(long_break)
-        self.co_efficent = 50 / int(session_time)
+        self.session_time = float(session_time)
+        self.break_time = float(break_time)
+        self.bonus_break = float(bonus_break)
+        self.long_break = float(long_break)
+        if self.session_time == 0:
+            self.co_efficent = 1
+        else:
+            self.co_efficent = 50 / int(session_time)
 
 
 filename = 'bin/config.json'
@@ -35,7 +38,7 @@ def changelog():
 
                     if data[t] != 'name':
 
-                        if not change.isnumeric():
+                        if not change.isnumeric() and not '.' in change:
                             print('\nthats not a vaild number! please try again \n')
                             continue
                     jpt[data[t]] = change

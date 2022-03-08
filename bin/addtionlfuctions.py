@@ -2,8 +2,8 @@ import os
 from pydub import AudioSegment
 from pydub.playback import play
 import pathlib
-
-file_version = '3.5.0 alpha'
+import bin.config as config
+file_version = '4.0.0 alpha'
 
 def speed_change(sound, speed=1.0):
     # Manually override the frame_rate. This tells the computer how many
@@ -16,27 +16,19 @@ def speed_change(sound, speed=1.0):
      # know how to play audio at standard frame rate (like 44.1k)
     return sound_with_altered_frame_rate.set_frame_rate(sound.frame_rate)
 
-def finish(t, f):
+def playsong(song ,t, f, speed_co):
+
     c = (pathlib.Path(t).parent.resolve())
 
-    g = (str(c)+'/Music/ost/finish1.wav')
+    g = (str(c)+f'/Music/ost/{song}')
 
     if os.name == "posix":
         song = AudioSegment.from_wav(g)
     else:
         song = AudioSegment.from_wav(g.replace('/', '\\'))
-    song = speed_change(song, 1 + f / 10)
+    song = speed_change(song, 1 + (f / 10) * (speed_co ** -1))
     play(song)
 
-def start(t, f):
-    c = (pathlib.Path(t).parent.resolve())
-    g =(str(c)+'/Music/ost/start.mp3')
-    if os.name == "posix":
-        song = AudioSegment.from_mp3(g)
-    else:
-        song = AudioSegment.from_mp3(g.replace('/', '\\'))
-    song = speed_change(song, 1 + f / 10 )
-    play(song)
 
 class bcolors:
     HEADER = '\033[95m'

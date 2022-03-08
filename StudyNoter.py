@@ -21,14 +21,14 @@ class TimerClass(models.threading.Thread):
     def run(self):
         print(f'Session {self.sessions_done + 1}/{self.sessions2}')
         models.art.tprint(f'Session {str(self.sessions_done + 1)} ')
-        models.addtionlfuctions.start(__file__, self.sessions_done)
+        #models.addtionlfuctions.playsong('start.wav', __file__, self.sessions_done, confi.co_efficent)
         while self.count > 0 and not self.event.is_set():
             self.Timer_(self.count - 1)
             self.count -= 1
             self.event.wait(1)
 
         print('\nGreat job you finished ! enjoy your break!')
-        models.addtionlfuctions.finish(__file__, self.sessions_done)
+        #models.addtionlfuctions.playsong('finish1.wav', __file__, self.sessions_done, confi.co_efficent)
         self.sessions -= 1
         self.break_count += 1
         self.sessions_done += 1
@@ -45,14 +45,14 @@ class TimerClass(models.threading.Thread):
             break_count = float(confi.long_break) * 60 * (self.sessions_done / (4 * confi.co_efficent))
 
         else:
-            break_count = (self.standard_break_time + self.sessions_done * float(confi.bonus_break)) * 60
+            break_count = (self.standard_break_time + (self.sessions_done - 1) * confi.bonus_break) * 60
 
         while break_count > 0 and not self.event.is_set():
             self.Timer_(break_count)
             break_count -= 1
             self.event.wait(1)
         print(f'Get ready for another session there is {self.sessions} sessions left')
-        self.count = 60 * float(confi.session_time)
+        self.count = 60 * confi.session_time
         self.run()
 
 
