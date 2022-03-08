@@ -94,7 +94,7 @@ def sessions(mood, e):
     sessionss = standard_session_time
     parm = now.weekday()
     if parm in schooldays:
-        sessionss =( (sessionss * 0.7) * (mood / 5.5) ) * (bonus[e])
+        sessionss =( (sessionss * 0.65) * (mood / 5.5) ) * (bonus[e])
     else:
         sessionss = ((sessionss * 1.35) * (mood / 7.5)) * (bonus[e])
     if sessionss < 1:

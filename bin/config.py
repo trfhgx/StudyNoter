@@ -29,7 +29,9 @@ def changelog():
                 with open(filename, 'r') as f:
                     jpt = json.load(f)
                     change = input(f'change {data[t]} value to: ')
-                    if data[i] != 'name':
+
+                    if data[t] != 'name':
+
                         if not change.isnumeric():
                             print('\n thats not a number! please try again \n')
                             continue
