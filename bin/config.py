@@ -1,16 +1,18 @@
 import json
 import os
+import time
 from pathlib import Path
 
 data = {1:'name', 2:'session time', 3:'break time', 4:'bonus break time', 5:'long break time'}
-version = 'v5.0.0 Alpha'
+version = 'v6.0.0 Alpha'
 class Config():
     def __init__(self, name='Joe', session_time=50, break_time=10, bonus_break=3, long_break=65):
         self.name = name
-        self.session_time = session_time
-        self.break_time = break_time
-        self.bonus_break = bonus_break
-        self.long_break = long_break
+        self.session_time = int(session_time)
+        self.break_time = int(break_time)
+        self.bonus_break = int(bonus_break)
+        self.long_break = int(long_break)
+        self.co_efficent = 50 / int(session_time)
 
 
 filename = 'bin/config.json'
@@ -28,14 +30,17 @@ def changelog():
                     break
                 with open(filename, 'r') as f:
                     jpt = json.load(f)
-                    change = input(f'change {data[t]} value to: ')
+                    old_value = jpt[data[t]]
+                    change = input(f'change {data[t]} value to ("{old_value}" is the old value): ')
 
                     if data[t] != 'name':
 
                         if not change.isnumeric():
-                            print('\n thats not a number! please try again \n')
+                            print('\nthats not a vaild number! please try again \n')
                             continue
                     jpt[data[t]] = change
+                    print(f'\nYour {data[t]} has been changed from "{old_value}" to "{change}" successfully!')
+                    time.sleep(0.5)
                 os.remove(filename)
                 with open(filename, 'w') as f:
 
@@ -65,7 +70,7 @@ def load_config():
             file = json.load(e)
             config = Config(file[data[1]], file[data[2]], file[data[3]], file[data[4]], file[data[5]])
         key = input(
-            f'Hello {config.name}!! welcome back to studyNoter {version}!. please type \n 1 /if you would like to continue \n 2 /if you would like to change your config \n 3 /if you would like to go with default config \n 4 /if you would like to take a look at your config and continue \n ')
+            f'Hello {config.name}!! welcome back to studyNoter {version}!. please type \n 1 /if you would like to continue \n 2 /if you would like to change your config \n 3 /if you would like to go with default config \n 4 /if you would like to take a look at your config and reload \n ')
         if not check(key, 4):
             load_config()
         else:
@@ -77,6 +82,8 @@ def load_config():
                 with open(filename, 'r') as nr:
                     nr = json.load(nr)
                     print(nr)
+                    time.sleep(1)
+                    load_config()
 
 
     else:

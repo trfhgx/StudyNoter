@@ -2,7 +2,6 @@ import bin.models as models
 
 import bin.config as config
 confi = config.load_config()
-app_version = "5.0.0 Alpha"
 schooldays = [0, 1, 2, 3, 6]
 weekends = [4, 5]
 standard_session_time = 5
@@ -41,9 +40,9 @@ class TimerClass(models.threading.Thread):
 
 
     def break_time(self, num):
-        if num == 4:
+        if num == 4 * confi.co_efficent:
             self.break_count = 0
-            break_count = float(confi.long_break) * 60 * (self.sessions_done / 4)
+            break_count = float(confi.long_break) * 60 * (self.sessions_done / (4 * confi.co_efficent))
 
         else:
             break_count = (self.standard_break_time + self.sessions_done * float(confi.bonus_break)) * 60
@@ -98,10 +97,11 @@ def sessions(mood, e):
     else:
         sessionss = ((sessionss * 1.35) * (mood / 7.5)) * (bonus[e])
     if sessionss < 1:
-        print('You should take a break today and enjoy yourself!')
+        print(f'You should take a break today {confi.name}!. Enjoy yourself!')
     else:
         input(f'Are you ready {confi.name}!? ')
 
+        sessionss = sessionss * confi.co_efficent
         t = TimerClass(float(confi.session_time) * 60, round(sessionss))
         t.run()
 
