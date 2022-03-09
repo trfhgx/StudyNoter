@@ -8,3 +8,4 @@
 .idea/vcs.xml
 .DS_Store
 bin/config.json
+bin/test.py
