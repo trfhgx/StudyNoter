@@ -1,8 +1,8 @@
 import bin.models as models
-
 import bin.config as config
+
 confi = config.load_config()
-app_version = "5.0.0 Alpha"
+print(f'StudyNoter v{config.version}')
 schooldays = [0, 1, 2, 3, 6]
 weekends = [4, 5]
 standard_session_time = 5
@@ -22,14 +22,16 @@ class TimerClass(models.threading.Thread):
     def run(self):
         print(f'Session {self.sessions_done + 1}/{self.sessions2}')
         models.art.tprint(f'Session {str(self.sessions_done + 1)} ')
-        models.addtionlfuctions.start(__file__, self.sessions_done)
+        models.addtionlfuctions.playsong('start.wav', __file__, self.sessions_done, confi.co_efficent)
         while self.count > 0 and not self.event.is_set():
-            self.Timer_(self.count - 1)
-            self.count -= 1
             self.event.wait(1)
+            self.count -= 1
+            self.Timer_(self.count)
+
+
 
         print('\nGreat job you finished ! enjoy your break!')
-        models.addtionlfuctions.finish(__file__, self.sessions_done)
+        models.addtionlfuctions.playsong('finish1.wav', __file__, self.sessions_done, confi.co_efficent)
         self.sessions -= 1
         self.break_count += 1
         self.sessions_done += 1
@@ -37,31 +39,33 @@ class TimerClass(models.threading.Thread):
             self.break_time(self.break_count)
         else:
             self.stop()
-            print(f'\nAstonishing job! you did {self.sessions_done} session and that means you studied/worked for {self.sessions_done * float(confi.session_time)} minutes! now go rest and enjoy your day')
+            print(f'\nAstonishing job! you did {self.sessions_done} session and that means you studied/worked for {self.sessions_done * confi.session_time} minutes! now go rest and enjoy your day')
 
 
     def break_time(self, num):
-        if num == 4:
+        if num == 4 * confi.co_efficent:
             self.break_count = 0
-            break_count = float(confi.long_break) * 60 * (self.sessions_done / 4)
+            break_count = confi.long_break * 60 * (self.sessions_done / (4 * confi.co_efficent))
 
         else:
-            break_count = (self.standard_break_time + self.sessions_done * float(confi.bonus_break)) * 60
+            break_count = (self.standard_break_time + (self.sessions_done - 1) * confi.bonus_break) * 60
 
         while break_count > 0 and not self.event.is_set():
-            self.Timer_(break_count)
-            break_count -= 1
             self.event.wait(1)
+            break_count -= 1
+            self.Timer_(break_count)
+
         print(f'Get ready for another session there is {self.sessions} sessions left')
-        self.count = 60 * float(confi.session_time)
+        self.count = 60 * confi.session_time
         self.run()
 
 
     def Timer_(self, num):
+        if num < 0: num = 0
+        num = int(num)
         q, mod = divmod(num, 60)
-        mod = int(mod)
-        if len(str(mod)) == 1: mod = '0' + str(mod)[:1]
-        models.sys.stdout.write(f"\rTime left: {int(q)}:{mod} ")
+        t = '{:02d}:{:02d}'.format(q, mod)
+        models.sys.stdout.write(f"\rTime left: {t}")
         models.sys.stdout.flush()
 
 
@@ -89,20 +93,21 @@ def before_start():
 
 
 
-def sessions(mood, e):
+def sessions(mood, e) :
     now = models.datetime.now()
     sessionss = standard_session_time
     parm = now.weekday()
     if parm in schooldays:
-        sessionss =( (sessionss * 0.7) * (mood / 5.5) ) * (bonus[e])
+        sessionss =( (sessionss * 0.65) * (mood / 5.5) ) * (bonus[e])
     else:
         sessionss = ((sessionss * 1.35) * (mood / 7.5)) * (bonus[e])
     if sessionss < 1:
-        print('You should take a break today and enjoy yourself!')
+        print(f'You should take a break today {confi.name}!. Enjoy yourself!')
     else:
         input(f'Are you ready {confi.name}!? ')
 
-        t = TimerClass(float(confi.session_time) * 60, round(sessionss))
+        sessionss = sessionss * confi.co_efficent
+        t = TimerClass(confi.session_time * 60, models.math.ceil(sessionss))
         t.run()
 
 if __name__ == "__main__":
