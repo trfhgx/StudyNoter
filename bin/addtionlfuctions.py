@@ -2,7 +2,6 @@ import os
 from pydub import AudioSegment
 from pydub.playback import play
 import pathlib
-import bin.config as config
 file_version = '4.0.0 alpha'
 
 def speed_change(sound, speed=1.0):
@@ -26,7 +25,8 @@ def playsong(song ,t, f, speed_co):
         song = AudioSegment.from_wav(g)
     else:
         song = AudioSegment.from_wav(g.replace('/', '\\'))
-    song = speed_change(song, 1 + (f / 10) * (speed_co ** -1))
+    song = speed_change(song, 1 + (f / 10) * (speed_co ** -1) * 10)
+    print('speed: ',1 + (f / 10) * (speed_co ** -1))
     play(song)
 
 
