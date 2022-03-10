@@ -25,7 +25,7 @@ def playsong(song ,t, f, speed_co):
         song = AudioSegment.from_wav(g)
     else:
         song = AudioSegment.from_wav(g.replace('/', '\\'))
-    song = speed_change(song, 1 + (f / 10) * (speed_co ** -1) * 10)
+    song = speed_change(song, 1 + (f / 10) * (speed_co ** -1))
     print('speed: ',1 + (f / 10) * (speed_co ** -1))
     play(song)
 

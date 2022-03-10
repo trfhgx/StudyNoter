@@ -63,9 +63,9 @@ def changelog():
         return config
 
 
-def check(key, max):
+def check(key, maxx):
     try:
-        if int(key) < 1 or int(key) > max:
+        if int(key) < 1 or int(key) > maxx:
             raise ValueError
     except ValueError:
         print('ErrorVE1 please retry and recheck your input!')
@@ -113,15 +113,15 @@ def load_config():
                 for i in data.values():
                     t = True
                     while t:
-                        set = input(f'set {i} value to: ')
+                        new = input(f'set {i} value to: ')
                         if i != 'name':
-                            if not set.replace('.', '').isnumeric():
+                            if not new.replace('.', '').isnumeric():
                                 print('thats not a number! please retry again')
                                 continue
                             else:
-                                dicts[i] = set
+                                dicts[i] = new
                         else:
-                            dicts[i] = set
+                            dicts[i] = new
                         t = False
 
                 with open(filename, 'w') as g:

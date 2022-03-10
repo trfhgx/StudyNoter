@@ -59,8 +59,8 @@ class TimerClass(models.threading.Thread):
         self.count = 60 * confi.session_time
         self.run()
 
-
-    def Timer_(self, num):
+    @staticmethod
+    def Timer_(num):
         if num < 0: num = 0
         num = int(num)
         q, mod = divmod(num, 60)
