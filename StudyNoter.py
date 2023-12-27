@@ -266,7 +266,7 @@ def sessions(mood, use_c, special=False):
     else:
         input(f"Are you ready {confi['name']}!? ")
         
-        t = TimerClass(confi['session_time'] * 15, models.math.ceil(sessions_s), special)
+        t = TimerClass(confi['session_time'] * 60, models.math.ceil(sessions_s), special)
         t.run()
 
 def play_sound():
