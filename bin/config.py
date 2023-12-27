@@ -3,64 +3,54 @@ import os
 import time
 from pathlib import Path
 import bin.ERRORS as error
-data = {1:'name', 2:'session time', 3:'break time', 4:'bonus break time', 5:'long break time'}
-version = 'v6.0.0 Alpha'
-class Config():
-    def __init__(self, name='Joe', session_time=50, break_time=10, bonus_break=3, long_break=65):
-        try:
-            self.name = name
-            self.session_time = float(session_time)
-            self.break_time = float(break_time)
-            self.bonus_break = float(bonus_break)
-            self.long_break = float(long_break)
-            if self.session_time == 0:
-                self.co_efficent = 1
-            else:
-                self.co_efficent = 50 / float(session_time)
-        except ValueError:
-           error.error_CD()
-        else:
-            print('Your config has been loaded successfully!')
+from bin.constants import standard_session_time, defualt_data
 
 
+   
 
-filename = 'bin/config.json'
+filename = "bin/config.json"
+
 
 def changelog():
-        s = True
-        while s:
-            print('type the following number to change the correct section')
-            for i in data.keys():
-                print(f'{i}: to change {data[i]}')
-            print(f"6: if you finished changing your config")
-            try:
-                t = int(input(''))
-                with open(filename, 'r') as f:
-                    jpt = json.load(f)
-                    if t == 6:
-                        break
-                    old_value = jpt[data[t]]
-                    change = input(f'change {data[t]} value to ("{old_value}" is the old value): ')
+    s = True
+    data_needed = list(defualt_data)
+    while s:
+        print("type the following number to change the correct section")
+        for i, t in enumerate(data_needed):
+            print(f"{i + 1}: to change {t.replace('_', ' ')}")
+        print(f"6: if you finished changing your config")
+        try:
+            t = int(input("")) - 1
+            with open(filename, "r") as f:
+                jpt = json.load(f)
+                if t == 5:
+                    break
+                old_value = jpt[data_needed[t]]
+                change = input(
+                    f'change {data_needed[t]} value to ("{old_value}" is the old value): '
+                )
 
-                    if data[t] != 'name':
+                if data_needed[t] != "name":
 
-                        if not change.replace('.', '').isnumeric():
-                            print('\nthats not a vaild number! please try again \n')
-                            continue
-                    jpt[data[t]] = change
-                    print(f'\nYour {data[t]} has been changed from "{old_value}" to "{change}" successfully!')
-                    time.sleep(0.5)
-                os.remove(filename)
-                with open(filename, 'w') as f:
+                    if not change.replace(".", "").isnumeric():
+                        print("\nthats not a vaild number! please try again \n")
+                        continue
+                    jpt[data_needed[t]] = float(change)
+                else:
+                    jpt[data_needed[t]] = change
 
-                    json.dump(jpt, f, indent=4)
+                print(
+                    f'\nYour {data_needed[t]} has been changed from "{old_value}" to "{change}" successfully!'
+                )
+                time.sleep(0.5)
+            os.remove(filename)
+            with open(filename, "w") as f:
 
-            except (KeyError, ValueError):
-                print('This key doesnt exist please recheck the number you entered!')
+                json.dump(jpt, f, indent=4)
 
-        config = Config(jpt[data[1]], jpt[data[2]], jpt[data[3]], jpt[data[4]], jpt[data[5]])
-
-        return config
+        except (KeyError, ValueError):
+            print("This key doesnt exist please recheck the number you entered!")
+    return jpt
 
 
 def check(key, maxx):
@@ -68,66 +58,61 @@ def check(key, maxx):
         if int(key) < 1 or int(key) > maxx:
             raise ValueError
     except ValueError:
-        print('ErrorVE1 please retry and recheck your input!')
+        print("ErrorVE1 please retry and recheck your input!")
         return False
     else:
         return True
 
 
-
 def load_config():
     if Path(filename).is_file():
-        with open(filename, 'r') as e:
+        with open(filename, "r") as e:
             try:
                 file = json.load(e)
             except json.decoder.JSONDecodeError:
                 error.error_CD()
-
-            config = Config(file[data[1]], file[data[2]], file[data[3]], file[data[4]], file[data[5]])
+            config = file
         key = input(
-            f'Hello {config.name}!! welcome back to studyNoter {version}!. please type \n 1 /if you would like to continue \n 2 /if you would like to change your config \n 3 /if you would like to go with default config \n 4 /if you would like to take a look at your config and reload \n ')
+            f"Hello {config['name']}!! welcome back to studyNoter. please type \n 1 /if you would like to continue \n 2 /if you would like to change your config \n 3 /if you would like to go with default config \n 4 /if you would like to take a look at your config and reload \n "
+        )
         if not check(key, 4):
             load_config()
+            
         else:
-            if key == '3':
-                config = Config()
-            elif key == '2':
+            if key == "3":
+                config = defualt_data
+            elif key == "2":
                 config = changelog()
-            elif key == '4':
-                with open(filename, 'r') as nr:
-                    nr = json.load(nr)
-                    print(nr)
-                    time.sleep(1)
-                    load_config()
+            elif key == "4":
+                print(config)
+                time.sleep(1)
+                config = load_config()
     else:
-        key = input(f'Hello welcome to studyNoter {version}!. please type \n 1 /if you would like to go with default config Highly recommended \n 2 /if you would like to set your own config \n')
-
+        key = input(
+            f"Hello welcome to studyNoter!. please type \n 1 /if you would like to go with default config \n 2 /if you would like to set your own config \n"
+        )
 
         if not check(key, 2):
             load_config()
         else:
-            if key == '1':
-                config = Config()
+            if key == "1":
+                config = defualt_data
             else:
                 dicts = {}
-                for i in data.values():
-                    t = True
-                    while t:
-                        new = input(f'set {i} value to: ')
-                        if i != 'name':
-                            if not new.replace('.', '').isnumeric():
-                                print('thats not a number! please retry again')
+                for i in list(defualt_data):
+                    while True:
+                        new = input(f"set {i} value to: ")
+                        if i != "name":
+                            if not new.replace(".", "").isnumeric():
+                                print("thats not a number! please retry again")
                                 continue
-                            else:
-                                dicts[i] = new
+                            dicts[i] = float(new)
                         else:
                             dicts[i] = new
-                        t = False
+                        break
 
-                with open(filename, 'w') as g:
+                with open(filename, "w") as g:
                     json.dump(dicts, g, indent=4)
-                    config = Config(dicts[data[1]], dicts[data[2]], dicts[data[3]], dicts[data[4]], dicts[data[5]])
-
-
-
+                    config = dicts
+    config['co_efficent'] = standard_session_time / config['session_time']
     return config

@@ -2,11 +2,12 @@
 
 ## Stable working Versions
 
-Use this section to tell people about which versions of your project are
-currently being supported with security updates.
-a5.0.0
+Currently stable working Versions.
+
 | Version | Stable             |
 | ------- | ------------------ |
+| a7.0.0  | :x:                |
+| a6.0.0  | :white_check_mark: |
 | a5.0.1  | :white_check_mark: |
 | a5.0.0  | :x:                |
 | a4.x.x  | :x:                |

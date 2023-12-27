@@ -1,7 +1,5 @@
-{
-    "session_done": [
-        "",
-        ""
-    ],
 
-}
+
+
+x = (1.1 + (sessions) / 25) - (f / 10) * (speed_co ** -1)
+s = 0.1 * (5 / sessions)

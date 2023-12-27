@@ -2,7 +2,7 @@ import os
 from pydub import AudioSegment
 from pydub.playback import play
 import pathlib
-file_version = '4.0.0 alpha'
+import random
 
 def speed_change(sound, speed=1.0):
     # Manually override the frame_rate. This tells the computer how many
@@ -15,29 +15,33 @@ def speed_change(sound, speed=1.0):
      # know how to play audio at standard frame rate (like 44.1k)
     return sound_with_altered_frame_rate.set_frame_rate(sound.frame_rate)
 
-def playsong(song ,t, f, speed_co):
+def playsong(song ,t, f, speed_co, sessions, real_sessions):
 
     c = (pathlib.Path(t).parent.resolve())
+    if "finish" in song:
+        ts = random.randint(1,2)
+        song = song+str(ts)+'.wav'
+        g = (str(c) + f'/Music/ost/{song}')
+    else:
+        songs = random.choice([i for i in os.listdir(str(c)+"/Music/ost") if 'start' in i and 'wav' in i])
 
-    g = (str(c)+f'/Music/ost/{song}')
+        g = (str(c) + f'/Music/ost/{songs}')
+
 
     if os.name == "posix":
         song = AudioSegment.from_wav(g)
     else:
         song = AudioSegment.from_wav(g.replace('/', '\\'))
-    song = speed_change(song, 1 + (f / 10) * (speed_co ** -1))
-    print('speed: ',1 + (f / 10) * (speed_co ** -1))
+    f += 1
+    x = 2 * speed_co * ((sessions ** -1)) + 0.2
+
+    if f == 0:
+        speed = 1.2
+        song = speed_change(song, speed)
+    else:
+        speed = x + (f / 6) * (speed_co ** -1)
+        song = speed_change(song, speed)
+    print('speed: ',speed)
     play(song)
 
-
-class bcolors:
-    HEADER = '\033[95m'
-    OKBLUE = '\033[94m'
-    OKCYAN = '\033[96m'
-    OKGREEN = '\033[92m'
-    WARNING = '\033[93m'
-    FAIL = '\033[91m'
-    ENDC = '\033[0m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
 

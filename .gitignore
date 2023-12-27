@@ -9,3 +9,27 @@
 .DS_Store
 bin/config.json
 bin/test.py
+Music/test.py
+.vscode/launch.json
+bin/__pycache__/__init__.cpython-310.pyc
+bin/__pycache__/__init__.cpython-38.pyc
+bin/__pycache__/addtionlfuctions.cpython-310.pyc
+bin/__pycache__/addtionlfuctions.cpython-38.pyc
+bin/__pycache__/config.cpython-310.pyc
+bin/__pycache__/config.cpython-38.pyc
+bin/__pycache__/constants.cpython-310.pyc
+bin/__pycache__/constants.cpython-38.pyc
+bin/__pycache__/Data.cpython-310.pyc
+bin/__pycache__/Data.cpython-38.pyc
+bin/__pycache__/ERRORS.cpython-310.pyc
+bin/__pycache__/ERRORS.cpython-38.pyc
+bin/__pycache__/models.cpython-310.pyc
+bin/__pycache__/models.cpython-38.pyc
+bin/__pycache__/requirements.cpython-310.pyc
+bin/__pycache__/requirements.cpython-38.pyc
+.vscode/launch.json
+Music/test.py
+istest.py
+import pandas as pd.py
+bin/Untitled-1.py
+bin/if True:.py
