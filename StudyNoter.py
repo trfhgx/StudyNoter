@@ -43,10 +43,8 @@ class TimerClass(models.threading.Thread):
         self.cache = 0
         if cache and True :
             self.sessions_done = int(temp_data[year][str(datetime.date.today())] * (confi['co_efficent']))
-            print(self.sessions_done)
             self.cache = self.sessions_done
             self.break_count = self.sessions_done % 4
-        print('long break', self.break_count >= math.ceil(4 * confi['co_efficent']), self.break_count, math.ceil(4 * confi['co_efficent']))
 
 
         c = 1
@@ -63,7 +61,6 @@ class TimerClass(models.threading.Thread):
                         confi['long_break_time'] * 60
                         + confi['long_break_time'] * 60 * ((c * 0.2) / (8 * confi['co_efficent'])) * k
                 )
-                print('long break', c, break_count / 60, confi['long_break_time'] )
 
 
                 # break_count = (
@@ -121,7 +118,6 @@ class TimerClass(models.threading.Thread):
         self.sessions -= 1
         self.break_count += 1
         self.sessions_done += 1
-        print(self.break_count)
         if self.sessions > 0:
             self.break_time()
         else:
@@ -131,7 +127,7 @@ class TimerClass(models.threading.Thread):
             )
 
     def break_time(self) -> None:
-        print('long break', self.break_count >= math.ceil(4 * confi['co_efficent']), self.break_count, math.ceil(4 * confi['co_efficent']))
+        print(math.ceil(4 * confi['co_efficent']) - self.break_count,' Sessions left from long break')
         if self.break_count >= math.ceil(4 * confi['co_efficent']):
             print('Long break moment')
             self.break_count = 0
@@ -192,9 +188,9 @@ def before_start():
 
     while True:
         try:
-            choice = int(input('Type\n1/ if you would like the program to calculate'
+            choice = int(float(input('Type\n1/ if you would like the program to calculate'
                                ' the amount of sessions for you HIGHLY RECOMMENDED!'
-                               '\n2/ if you would like to set a custom number of sessions\n'))
+                               '\n2/ if you would like to set a custom number of sessions\n')))
             if choice == 1:
                 print(
                     "Before we 1start tell us how you feel right now from a scale of 1 to 10 the higher the better"

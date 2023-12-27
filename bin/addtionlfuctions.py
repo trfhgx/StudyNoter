@@ -23,10 +23,10 @@ def playsong(song ,t, f, speed_co, sessions, real_sessions):
         song = song+str(ts)+'.wav'
         g = (str(c) + f'/Music/ost/{song}')
     else:
-        songs = random.choice([i for i in os.listdir(str(c)+"/Music/ost") if 'start' in i and 'wav' in i])
+        song = random.choice([i for i in os.listdir(str(c)+"/Music/ost") if 'start' in i and 'wav' in i])
 
-        g = (str(c) + f'/Music/ost/{songs}')
-
+        g = (str(c) + f'/Music/ost/{song}')
+    rem = song
 
     if os.name == "posix":
         song = AudioSegment.from_wav(g)
@@ -41,7 +41,10 @@ def playsong(song ,t, f, speed_co, sessions, real_sessions):
     else:
         speed = x + (f / 6) * (speed_co ** -1)
         song = speed_change(song, speed)
-    print('speed: ',speed)
+    if "start" in rem:
+        print("Speed is %.2f" % (speed * 100 - 100), "%",
+              "Slower" if speed * 100 - 100 < 0 else "Faster" + " Than the original")
+
     play(song)
 
 
